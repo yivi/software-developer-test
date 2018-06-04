@@ -1,0 +1,6 @@
+.DS_Store
+.idea
+build/
+composer.lock
+vendor
+.vagrant
