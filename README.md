@@ -80,9 +80,9 @@ You have to work with a dummy DB (```minube```) that contains tables representin
 - Retrieve a JSON with a list of pois from a given destination. 
 Take into account that you can use Redis as cache layer and the method should be able to retrieve a huge list without returning a big JSON output.
 It could resolve this pattern of URL: 
-    - ```http://minube.local/pois/get/{countryId}```.
-    - ```http://minube.local/pois/get/{countryId}/{zoneId}```.
-    - ```http://minube.local/pois/get/{countryId}/{zoneId}/{cityId}```.
+    - ```http://minube.local/pois/{countryId}```.
+    - ```http://minube.local/pois/{countryId}/{zoneId}```.
+    - ```http://minube.local/pois/{countryId}/{zoneId}/{cityId}```.
     
 - Update a single poi data. You have to implement the bootstrapping to create a new route and manage the request in order to update any attribute from the given poi.
 
