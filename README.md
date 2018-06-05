@@ -51,7 +51,7 @@ docker-compose run --rm \
 
 Import database dump
 
-``docker exec -i test-minube_mysql_1 mysql -uphalcon -psecret phalcondb < data/mysql/minube_test.sql``
+``docker exec -i <mysqlimage> mysql -uphalcon -psecret phalcondb < data/mysql/minube_test.sql``
        
 And finally, launch the project:
 
@@ -68,7 +68,7 @@ Get image IP:
 
 E.g.:
 
-``docker inspect test-minube_redis_1 | grep IPAddress``
+``docker inspect softwaredevelopertest_redis_1 | grep IPAddress``
 
 
 ## Implementing the test
