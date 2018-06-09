@@ -1,15 +1,16 @@
 <?php
 
-$routes[] = array(
-    'method' => 'get',
-    'route' => '/status',
-    'handler' => array('Minube\Controllers\StatusController', 'statusAction')
-);
-
-//$routes[] = array(
-//    'method' => 'get',
-//    'route' => '/pois/get/{countryId}',
-//    'handler' => array('Minube\Controllers\PoisController', 'getAction')
-//);
-
-return $routes;
+return [
+	// default status route
+	[
+		'method'  => 'get',
+		'route'   => '/status',
+		'handler' => [ 'Minube\Controllers\StatusController', 'statusAction' ],
+	],
+	// get POIs by location (location type and id are passed by query string)
+	[
+		'method'  => 'get',
+		'route'   => '/pois',
+		'handler' => [ 'Minube\Controllers\PoisController', 'getByLocationAction' ],
+	],
+];
