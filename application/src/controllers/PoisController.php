@@ -69,4 +69,81 @@ class PoisController extends \Phalcon\Mvc\Controller {
 		] );
 
 	}
+
+	public function updateAction( $poisId ) {
+
+		/** @var Pois $pois */
+		$this->response->setContentType( 'application/json' );
+		$poisId = filter_var( $poisId );
+		$pois   = Pois::findFirst( [ "id = $poisId" ] );
+
+		// If we couldn't find the POI by this ID, nothing to update.
+		if ( ! $pois ) {
+			$this->response->setStatusCode( 404 );
+
+			return json_encode(
+				[
+					'status'  => 'KO',
+					'message' => 'That POI does\'t exist. Cannot update it.',
+				]
+			);
+		}
+
+		// get and decode the json body
+		$request = $this->request->getJsonRawBody( true );
+
+		// if the result is not an associative array, something went wrong.
+		if ( ! is_array( $request ) ) {
+			return [
+				'status'  => 'KO',
+				'message' => 'Malformed request.',
+			];
+		}
+
+		// check for the corresponding keys in the user input, and set the corresponding property
+		if ( array_key_exists( 'city_id', $request ) ) {
+			$pois->setCityId( filter_var( $request['city_id'] ) );
+		}
+
+		if ( array_key_exists( 'subcategory_id', $request ) ) {
+			$pois->setSubcategoryId( filter_var( $request['subcategory_id'] ) );
+		}
+
+		if ( array_key_exists( 'name', $request ) ) {
+			$pois->setName( $request['name'] );
+		}
+
+		if ( array_key_exists( 'geocode_id', $request ) ) {
+			$pois->setGeocodeId( filter_var( $request['geocode_id'] ) );
+		}
+
+		// if the object isn't dirty after this, let's exit without further ado.
+		if (! $pois->getDirtyState()) {
+			return json_encode(
+				[
+					'status'  => 'OK',
+					'message' => "Nothing to update.",
+				]
+			);
+		}
+
+		$success = $pois->update();
+
+		if ( $success === true) {
+			return json_encode(
+				[
+					'status'  => 'OK',
+					'message' => "POI $poisId updated successfully",
+				]
+			);
+
+		} else {
+			return json_encode( [
+				'status'  => 'KO',
+				'message' => "Something went wrong. Update didn't take.",
+			] );
+		}
+
+
+	}
 }
