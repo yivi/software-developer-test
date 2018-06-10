@@ -6,11 +6,13 @@ use Minube\Models\Pois;
 
 class PoisController extends \Phalcon\Mvc\Controller {
 
+	/** @var Pois */
+	private $poisService;
+
 	/**
 	 * @param $cityId
 	 *
 	 * @return string
-	 * @throws \Exception
 	 */
 	public function getByLocationAction() {
 
@@ -24,19 +26,11 @@ class PoisController extends \Phalcon\Mvc\Controller {
 		$this->response->setContentType( 'application/json' );
 
 		// we haven't received any location id. exit.
-		if ( ! $cityId && ! $zoneId && ! $countryId ) {
+		$parameterCheck = $this->checkParameters( $cityId, $zoneId, $countryId );
+		if ( $parameterCheck !== 'OK' ) {
 			return json_encode( [
 				'status'  => 'KO',
-				'message' => 'Missing City, Zone or Country Id. Can\'t find POIs without a location ID',
-				'data'    => [],
-			] );
-		}
-
-		// we have received too many location IDs, which may lead to inconsistent results. exit.
-		if ( $cityId && $zoneId || $cityId && $countryId || $zoneId && $countryId ) {
-			return json_encode( [
-				'status'  => 'KO',
-				'message' => 'Received more than one location ID. Please, provide only with City, Zone or Country ID.',
+				'message' => $parameterCheck,
 				'data'    => [],
 			] );
 		}
@@ -59,7 +53,15 @@ class PoisController extends \Phalcon\Mvc\Controller {
 				$locationId = false;
 		endswitch;
 
-		$pois = Pois::findByLocation( $location, $locationId, $page, $pageSize, $purgeCache );
+		try {
+			$pois = $this->getPoisService()->findByLocation( $location, $locationId, $page, $pageSize, $purgeCache );
+		} catch ( \Exception $exception ) {
+			return json_encode( [
+				'status'  => 'KO',
+				'message' => $exception->getMessage(),
+				'data'    => [],
+			] );
+		}
 
 		return json_encode( [
 			'status'   => 'OK',
@@ -118,7 +120,7 @@ class PoisController extends \Phalcon\Mvc\Controller {
 		}
 
 		// if the object isn't dirty after this, let's exit without further ado.
-		if (! $pois->getDirtyState()) {
+		if ( ! $pois->getDirtyState() ) {
 			return json_encode(
 				[
 					'status'  => 'OK',
@@ -129,7 +131,7 @@ class PoisController extends \Phalcon\Mvc\Controller {
 
 		$success = $pois->update();
 
-		if ( $success === true) {
+		if ( $success === true ) {
 			return json_encode(
 				[
 					'status'  => 'OK',
@@ -144,6 +146,47 @@ class PoisController extends \Phalcon\Mvc\Controller {
 			] );
 		}
 
-
 	}
+
+	/**
+	 * @param int $cityId
+	 * @param int $zoneId
+	 * @param int $countryId
+	 *
+	 * @return string
+	 */
+	private function checkParameters( $cityId, $zoneId, $countryId ) {
+
+		if ( ! $cityId && ! $zoneId && ! $countryId ) {
+			return 'Missing City, Zone or Country Id. Can\'t find POIs without a location ID';
+		}
+
+		// we have received too many location IDs, which may lead to inconsistent results. exit.
+		if ( $cityId && $zoneId || $cityId && $countryId || $zoneId && $countryId ) {
+			return 'Received more than one location ID. Please, provide only with City, Zone or Country ID.';
+		}
+
+		return 'OK';
+	}
+
+	/**
+	 * @return Pois
+	 */
+	public function getPoisService(): Pois {
+		// This is is very hackish, but since we do not have real depencency injection in Phalcon, mocking
+		// poisService is otherwise difficult
+		if ( $this->poisService === null ) {
+			$this->poisService = $this->getDI()->get( Pois::class );
+		}
+
+		return $this->poisService;
+	}
+
+	/**
+	 * @param Pois $poisService
+	 */
+	public function setPoisService( Pois $poisService ) {
+		$this->poisService = $poisService;
+	}
+
 }
