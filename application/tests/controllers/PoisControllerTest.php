@@ -52,7 +52,7 @@ class PoisControllerTest extends UnitTestCase {
 			->method( 'getQuery' )
 			->will( $this->returnValueMap( $valueMap ) );
 
-		$mockPoisService->expects($this->once())
+		$mockPoisService->expects($this->atMost(1))
 			->method('findByLocation')
 			->will($this->returnValue([]));
 

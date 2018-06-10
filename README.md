@@ -57,7 +57,7 @@ And finally, launch the project:
 
 ``docker-compose up -d``
 
-Now you can now launch your application in your browser visiting ``http://minube.local`` and ``http://minube.local:8080`` for the DB schema
+Now you can now launch your application in your browser visiting http://minube.local:8180 and http://minube.local:8080 for the DB schema
 
 
 ### Additional information
@@ -75,7 +75,7 @@ E.g.:
 
 You can test that the project works checking the url [http://minube.local/status](http://minube.local/status)
 
-You have to work with a dummy DB (```minube```) that contains tables representing a list of Points of Interest (POIs) from Andorra and create the logic to: 
+You have to work with a dummy DB (```phalcondb```) that contains tables representing a list of Points of Interest (POIs) from Andorra and create the logic to:
 
 - Retrieve a JSON with a list of pois from a given destination. 
 Take into account that you can use Redis as cache layer and the method should be able to retrieve a huge list without returning a big JSON output.
