@@ -31,7 +31,7 @@ class Pois extends Model {
 	 * @return \Phalcon\Mvc\Model\ResultsetInterface
 	 * @throws \Exception
 	 */
-	public static function findByLocation( $location, $locationId, $pageNumber = 1, $pageSize = 100, $purgeCache = 0 ) {
+	public function findByLocation( $location, $locationId, $pageNumber = 1, $pageSize = 100, $purgeCache = 0 ) {
 
 		$offset = $pageSize * ( $pageNumber - 1 );
 		if ( ! in_array( $location, [ 'city', 'zone', 'country' ] ) ) {
@@ -42,7 +42,7 @@ class Pois extends Model {
 			// TODO: Purge cache if $purgeCache is != 0
 		}
 
-		$query = self::query()
+		$query = static::query()
 		             ->orderBy( 'Minube\Models\Pois.id ASC' )
 		             ->columns( [ 'Minube\Models\Pois.id', 'Minube\Models\Pois.name', 'Minube\Models\Pois.geocode_id' ] )
 		             ->cache( [ 'key' => "poisfindbylocation-$location-$locationId-$pageNumber-$pageSize", 'lifetime' => 600 ] )
