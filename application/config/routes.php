@@ -11,6 +11,11 @@ return [
 	[
 		'method'  => 'get',
 		'route'   => '/pois',
-		'handler' => [ 'Minube\Controllers\PoisController', 'getByLocationAction' ],
+		'handler' => [ \Minube\Controllers\PoisController::class, 'getByLocationAction' ],
+	],
+	[
+		'method'  => 'put',
+		'route'   => '/pois/{poisId}',
+		'handler' => [ \Minube\Controllers\PoisController::class, 'updateAction' ],
 	],
 ];
