@@ -5,41 +5,41 @@ namespace MinubeTests;
 use Phalcon\DI;
 use Phalcon\Test\UnitTestCase as PhalconTestCase;
 
-abstract class UnitTestCase extends PhalconTestCase
-{
-    protected $_cache;
+abstract class UnitTestCase extends PhalconTestCase {
 
-    /**
-     * @var \Phalcon\Config
-     */
-    protected $_config;
+	protected $_cache;
 
-    /**
-     * @var bool
-     */
-    private $_loaded = false;
+	/**
+	 * @var \Phalcon\Config
+	 */
+	protected $_config;
 
-    public function setUp(\Phalcon\DiInterface $di = NULL, \Phalcon\Config $config = NULL)
-    {
-        // Load any additional services that might be required during testing
-        $di = DI::getDefault();
+	/**
+	 * @var bool
+	 */
+	private $_loaded = false;
 
-        // Get any DI components here. If you have a config, be sure to pass it to the parent
+	public function setUp() {
+		parent::setUp();
 
-        parent::setUp();
+		// Load any additional services that might be required during testing
+		$di = Di::getDefault();
 
-        $this->_loaded = true;
-    }
+		// Get any DI components here. If you have a config, be sure to pass it to the parent
 
-    /**
-     * Check if the test case is setup properly
-     *
-     * @throws \PHPUnit_Framework_IncompleteTestError;
-     */
-    public function __destruct()
-    {
-        if (!$this->_loaded) {
-            throw new \PHPUnit_Framework_IncompleteTestError('Please run parent::setUp().');
-        }
-    }
+		$this->setDi( $di );
+
+		$this->_loaded = true;
+	}
+
+	/**
+	 * Check if the test case is setup properly
+	 *
+	 * @throws \PHPUnit_Framework_IncompleteTestError;
+	 */
+	public function __destruct() {
+		if ( ! $this->_loaded ) {
+			throw new \PHPUnit_Framework_IncompleteTestError( 'Please run parent::setUp().' );
+		}
+	}
 }
