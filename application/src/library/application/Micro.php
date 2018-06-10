@@ -7,6 +7,7 @@ use Minube\Interfaces\IRun;
 use Minube\Models\Pois;
 use Phalcon\Cache\Backend\Redis;
 use Phalcon\Cache\Frontend\Data as FrontendData;
+use Phalcon\Db\Adapter\Pdo\Mysql as MysqlConnection;
 
 class Micro extends \Phalcon\Mvc\Micro implements IRun {
 
@@ -17,30 +18,35 @@ class Micro extends \Phalcon\Mvc\Micro implements IRun {
 	 *
 	 * @param array $config full path to configuration file
 	 */
-	public function setConfig( $config ) {
+	public function setConfig( array $config ) {
 
-		$di = new \Phalcon\DI\FactoryDefault();
-		$di->set( 'config', new \Phalcon\Config( $config ) );
+		$config = new \Phalcon\Config( $config );
+		$di     = new \Phalcon\DI\FactoryDefault();
+		$di->set( 'config', $config );
 
-		$di->set( 'db', function () use ( $di ) {
-			$configuration = [
-				'host'     => $di->get( 'config' )->database->host,
-				'username' => $di->get( 'config' )->database->username,
-				'password' => $di->get( 'config' )->database->password,
-				'dbname'   => $di->get( 'config' )->database->name,
-			];
+		$di->set( 'db',
+			function () use ( $config ) {
 
-			return new \Phalcon\Db\Adapter\Pdo\Mysql( $configuration );
-		} );
 
-		$di->set( 'modelsCache', function () use ( $di ) {
+				$configuration = [
+					'host'     => $config->get( 'database' )->host,
+					'username' => $config->get( 'database' )->username,
+					'password' => $config->get( 'database' )->password,
+					'dbname'   => $config->get( 'database' )->name,
+				];
+
+				return new MysqlConnection( $configuration );
+
+			} );
+
+		$di->set( 'modelsCache', function () use ( $config ) {
 			$frontCache = new FrontendData( [
 				"lifetime" => 172800,
 			] );
 
 			return new Redis( $frontCache, [
-				'host' => $di->get( 'config' )->redis->host,
-				'port' => $di->get( 'config' )->redis->port,
+				'host' => $config->get( 'redis' )->host,
+				'port' => $config->get( 'redis' )->port,
 			] );
 		} );
 
