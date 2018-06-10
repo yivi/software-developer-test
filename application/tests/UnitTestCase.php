@@ -1,13 +1,12 @@
 <?php
 
+namespace MinubeTests;
+
 use Phalcon\DI;
 use Phalcon\Test\UnitTestCase as PhalconTestCase;
 
 abstract class UnitTestCase extends PhalconTestCase
 {
-    /**
-     * @var \Voice\Cache
-     */
     protected $_cache;
 
     /**
@@ -20,14 +19,14 @@ abstract class UnitTestCase extends PhalconTestCase
      */
     private $_loaded = false;
 
-    public function setUp(Phalcon\DiInterface $di = NULL, Phalcon\Config $config = NULL)
+    public function setUp(\Phalcon\DiInterface $di = NULL, \Phalcon\Config $config = NULL)
     {
         // Load any additional services that might be required during testing
         $di = DI::getDefault();
 
         // Get any DI components here. If you have a config, be sure to pass it to the parent
 
-        parent::setUp($di);
+        parent::setUp();
 
         $this->_loaded = true;
     }
