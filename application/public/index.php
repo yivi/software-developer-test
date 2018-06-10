@@ -14,22 +14,6 @@ try {
 
 	$app->setAutoload( require $autoLoad );
 	$app->setConfig( require $config );
-
-	switch ( $_SERVER['REQUEST_METHOD'] ) {
-
-		case 'GET':
-			$data = $_GET;
-			unset( $data['_url'] );
-			break;
-
-		case 'POST':
-			$data = $_POST;
-			break;
-
-		default: // PUT AND DELETE
-			parse_str( file_get_contents( 'php://input' ), $data );
-			break;
-	}
 	$app->setRoutes( require $routes );
 
 	$app->setDependencies();
