@@ -13,6 +13,7 @@ class Pois extends Model {
 	protected $geocode_id;
 
 	public function initialize() {
+		$this->useDynamicUpdate( true );
 		$this->belongsTo(
 			'city_id',
 			Cities::class,
