@@ -36,11 +36,17 @@ INSERT INTO `cities` (`id`, `zone_id`, `country_id`, `name`, `geocode_id`) VALUE
 (416749, 90, 224, 'Ansalonga', 4195438),
 (416750, 87, 224, 'Vila', 4195439);
 
+ALTER TABLE `cities`
+ADD PRIMARY KEY `id` (`id`);
+
 
 CREATE TABLE IF NOT EXISTS `countries` (
   `id` int(10) unsigned NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `countries`
+ADD PRIMARY KEY `id` (`id`);
 
 INSERT INTO `countries` (`id`, `name`) VALUES
 (224, 'Andorra');
@@ -1089,6 +1095,9 @@ INSERT INTO `geocodes` (`id`, `latitude`, `longitude`, `accuracy`) VALUES
 (5526160, '42.508191', '1.522470', 50),
 (5528726, '-20.386300', '-43.501370', 8),
 (5529354, '42.507873', '1.523679', 8);
+
+ALTER TABLE `geocodes`
+ADD PRIMARY KEY `id` (`id`);
 
 
 CREATE TABLE IF NOT EXISTS `pois` (
@@ -2329,6 +2338,11 @@ INSERT INTO `pois` (`id`, `name`, `geocode_id`, `city_id`, `subcategory_id`) VAL
 (3662827, 'Ouro Preto - república ', 5528726, 304519, 125),
 (3663076, 'La Terrasa', 5529354, 16654, NULL);
 
+ALTER TABLE `pois`
+ADD PRIMARY KEY `id_primary` (`id`);
+
+ALTER TABLE `pois`
+ADD INDEX `city_id` (`city_id`);
 
 CREATE TABLE IF NOT EXISTS `subcategories` (
   `id` int(10) unsigned NOT NULL,
@@ -2472,6 +2486,8 @@ INSERT INTO `subcategories` (`id`, `name`) VALUES
 (139, 'Pensiones'),
 (141, 'Bodegas');
 
+ALTER TABLE `subcategories`
+ADD PRIMARY KEY `id` (`id`)
 
 CREATE TABLE IF NOT EXISTS `zones` (
   `id` int(10) unsigned NOT NULL,
@@ -2489,6 +2505,8 @@ INSERT INTO `zones` (`id`, `name`, `country_id`) VALUES
 (3573, 'La Massana', 224),
 (3574, 'Sant Julià de Lòria', 224);
 
+ALTER TABLE `zones`
+ADD PRIMARY KEY `id` (`id`);
 
 
 
