@@ -46,7 +46,7 @@ class Pois extends Model {
 		             ->orderBy( 'Minube\Models\Pois.id ASC' )
 		             ->columns( [ 'Minube\Models\Pois.id', 'Minube\Models\Pois.name', 'Minube\Models\Pois.geocode_id' ] )
 		             ->cache( [ 'key' => "poisfindbylocation-$location-$locationId-$pageNumber-$pageSize", 'lifetime' => 600 ] )
-		             ->limit( 20, $offset );
+		             ->limit( $pageSize, $offset );
 
 
 		switch ( $location ):
